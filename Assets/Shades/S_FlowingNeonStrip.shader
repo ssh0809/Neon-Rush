@@ -24,10 +24,12 @@ Shader "NeonRush/FlowingNeonStrip"
         Pass
         {
             Name "FlowingNeonStrip"
+            Tags { "LightMode" = "UniversalForward" }
             ZWrite On
             Cull Back
 
             HLSLPROGRAM
+            #pragma target 2.0
             #pragma vertex Vert
             #pragma fragment Frag
 

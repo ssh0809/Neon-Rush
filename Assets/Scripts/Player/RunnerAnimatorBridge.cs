@@ -113,4 +113,15 @@ public sealed class RunnerAnimatorBridge : MonoBehaviour
             }
         }
     }
+
+    // Starter Assets locomotion clips still emit these animation events.
+    // This project drives movement through RunnerController, so we accept
+    // the events here to avoid missing-receiver warnings on the character model.
+    private void OnFootstep(AnimationEvent animationEvent)
+    {
+    }
+
+    private void OnLand(AnimationEvent animationEvent)
+    {
+    }
 }

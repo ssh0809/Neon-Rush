@@ -354,7 +354,7 @@ public static class CyberTrackSegmentBuilder
 
     private static Light FindDirectionalLight()
     {
-        Light[] lights = Object.FindObjectsByType<Light>(FindObjectsInactive.Exclude);
+        Light[] lights = Object.FindObjectsByType<Light>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
         foreach (Light light in lights)
         {
             if (light != null && light.type == LightType.Directional)
@@ -368,7 +368,7 @@ public static class CyberTrackSegmentBuilder
 
     private static UnityEngine.Rendering.Volume FindOrCreateGlobalVolume()
     {
-        UnityEngine.Rendering.Volume[] volumes = Object.FindObjectsByType<UnityEngine.Rendering.Volume>(FindObjectsInactive.Exclude);
+        UnityEngine.Rendering.Volume[] volumes = Object.FindObjectsByType<UnityEngine.Rendering.Volume>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
         foreach (UnityEngine.Rendering.Volume volume in volumes)
         {
             if (volume != null && volume.isGlobal)

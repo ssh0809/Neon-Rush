@@ -2350,6 +2350,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpeedLinesOverlay
   runner: {fileID: 485434742}
+  overlayShader: {fileID: 4800000, guid: 94a1d3e2d06c4743bc5e0c9a071ade37, type: 3}
   tint: {r: 0.35, g: 0.8, b: 1, a: 1}
   minSpeed: 7
   fullIntensitySpeed: 17

@@ -4,6 +4,7 @@ using UnityEngine;
 public sealed class SpeedLinesOverlay : MonoBehaviour
 {
     [SerializeField] private RunnerController runner;
+    [SerializeField] private Shader overlayShader;
     [SerializeField] private Color tint = new Color(0.35f, 0.8f, 1f, 1f);
     [SerializeField] private float minSpeed = 9f;
     [SerializeField] private float fullIntensitySpeed = 17f;
@@ -47,9 +48,12 @@ public sealed class SpeedLinesOverlay : MonoBehaviour
 
     private void CreateOverlay()
     {
-        Shader shader = Shader.Find("NeonRush/SpeedLinesOverlay");
+        Shader shader = overlayShader != null
+            ? overlayShader
+            : Shader.Find("NeonRush/SpeedLinesOverlay");
         if (shader == null)
         {
+            Debug.LogWarning("[SpeedLinesOverlay] Missing shader: NeonRush/SpeedLinesOverlay");
             enabled = false;
             return;
         }

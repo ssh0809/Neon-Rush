@@ -1,0 +1,329 @@
+\documentclass[UTF8,a4paper,12pt]{ctexart}
+
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{listings}
+
+\geometry{left=2.5cm,right=2.5cm,top=2.6cm,bottom=2.6cm}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  urlcolor=blue
+}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  frame=single,
+  columns=fullflexible
+}
+
+\title{\textbf{Neon Rush 霓虹跑酷实验报告}}
+\author{小组成员：请填写姓名}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{项目简介}
+
+\textbf{Neon Rush} 是一个基于 Unity 6 和 Universal Render Pipeline（URP）制作的 3D 三轨道无尽跑酷 Demo。玩家控制角色在赛博朋克风格跑道上自动前进，通过换道、跳跃、下滑躲避障碍物，并根据红蓝能量门切换自身能量状态。项目重点展示跑酷玩法闭环、程序化跑道生成、能量交互、粒子反馈、霓虹材质、后处理 Bloom 和开始界面等内容。
+
+本项目主要用于课程实验、课堂展示和非商业学习演示。
+
+\section{项目背景}
+
+本项目的创作背景来自对赛博朋克城市、霓虹灯光和高速跑酷玩法的结合尝试。无尽跑酷类游戏规则直观，适合作为 Unity 课程项目进行功能拆分和展示；赛博朋克风格则具有明显的视觉辨识度，适合展示 URP、Bloom、发光材质、Shader 和粒子特效等图形学内容。
+
+在设计时，小组希望做出一个“看起来速度很快、操作规则简单、视觉反馈明显”的 Demo。因此游戏选择三轨道跑酷作为核心玩法，并围绕红蓝能量切换、能量门、能量爆发、流动霓虹跑道和粒子反馈进行扩展。
+
+\section{故事设定}
+
+游戏设定在一座被霓虹广告、能量管线和空中轨道覆盖的未来城市中。玩家扮演一名进入城市数据轨道的能量奔跑者，需要在不断生成的赛博轨道上向前冲刺。轨道中的红蓝能量门代表不同的数据通道，玩家必须及时切换自身能量状态才能通过。
+
+随着奔跑距离增加，障碍物和能量门不断出现。玩家在奔跑过程中积累能量，当能量充满后可以释放能量爆发，短时间获得保护并清除前方障碍。整体故事服务于玩法表现，重点突出高速、能量切换和霓虹视觉冲击。
+
+\section{实验目的}
+
+\begin{enumerate}
+  \item 熟悉 Unity 6 中 3D 场景、角色控制、碰撞检测和 UI 的基本开发流程。
+  \item 掌握 URP 渲染管线下发光材质、Bloom、Volume 后处理和 Shader 效果的使用方法。
+  \item 实现一个具有基本可玩性的无尽跑酷游戏原型。
+  \item 通过粒子特效、流动霓虹线、能量门和开始界面强化游戏的赛博朋克视觉风格。
+  \item 规范整理第三方素材来源、许可证和项目分工，形成可提交的课程实验项目。
+\end{enumerate}
+
+\section{开发环境}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ll}
+\toprule
+项目 & 内容 \\
+\midrule
+引擎版本 & Unity 6 6000.4.7f1 \\
+渲染管线 & Universal Render Pipeline \\
+输入系统 & Unity Input System \\
+目标平台 & Windows PC \\
+主场景 & \texttt{Assets/Scenes/Main.unity} \\
+主要语言 & C\# \\
+\bottomrule
+\end{tabular}
+\caption{项目开发环境}
+\end{table}
+
+\section{玩法设计}
+
+游戏采用三轨道自动前进玩法。玩家不需要控制角色前进，只需要根据障碍物、能量门和道路情况进行即时操作。
+
+\subsection{基本操作}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ll}
+\toprule
+操作 & 按键 \\
+\midrule
+左右换道 & \texttt{A/D} 或方向键 \\
+跳跃 & \texttt{Space}、\texttt{W} 或上方向键 \\
+下滑 & \texttt{S} 或下方向键 \\
+切换能量模式 & \texttt{1}、\texttt{2} 或 \texttt{E} \\
+能量爆发 & \texttt{F} \\
+开始游戏 & 点击 \texttt{START}，或按 \texttt{Enter} / \texttt{Space} \\
+\bottomrule
+\end{tabular}
+\caption{玩家操作方式}
+\end{table}
+
+\subsection{已实现玩法内容}
+
+\begin{itemize}
+  \item 三轨道自动跑酷移动。
+  \item 跳跃、下滑、左右换道。
+  \item 多种障碍物响应，包括失败、减速和击退。
+  \item 红蓝能量门判定，玩家需要切换到对应能量状态。
+  \item 分数、速度和能量条 UI。
+  \item 开始界面和失败界面。
+  \item 能量爆发系统：能量满后按 \texttt{F} 触发，生成爆发特效并清理前方障碍物。
+  \item 粒子反馈：收集、撞击、过门、能量爆发都有对应 VFX。
+\end{itemize}
+
+\section{使用说明}
+
+\subsection{运行方式}
+
+\begin{enumerate}
+  \item 使用 Unity 6 6000.4.7f1 打开项目文件夹。
+  \item 打开主场景 \texttt{Assets/Scenes/Main.unity}。
+  \item 点击 Unity 编辑器上方的 Play 按钮运行游戏。
+  \item 在开始界面点击 \texttt{START}，或按 \texttt{Enter} / \texttt{Space} 开始游戏。
+\end{enumerate}
+
+\subsection{游戏操作}
+
+玩家进入游戏后会自动向前奔跑。遇到障碍物时使用换道、跳跃或下滑进行躲避；遇到红蓝能量门时，需要使用 \texttt{1}、\texttt{2} 或 \texttt{E} 切换到对应能量颜色。能量充满后按 \texttt{F} 释放能量爆发。
+
+\subsection{注意事项}
+
+\begin{itemize}
+  \item \texttt{QUIT} 按钮在 Unity 编辑器中会停止 Play 模式，在打包后的程序中会退出游戏。
+  \item 项目中部分外部素材仅用于课程学习和非商业展示，不建议直接用于公开发布或商业用途。
+  \item 如果需要打包发布，应先重新核对 \texttt{docs/asset\_sources.md} 中的素材授权状态。
+\end{itemize}
+
+\section{系统实现}
+
+\subsection{游戏流程管理}
+
+核心脚本为 \texttt{Assets/Scripts/Core/GameManager.cs}。该脚本使用 Ready、Playing、GameOver 三种状态管理游戏流程。游戏启动后先进入开始界面，点击 START 后进入正式游戏。失败后进入 GameOver 状态，并暂停时间。
+
+\subsection{玩家控制}
+
+玩家控制相关脚本包括：
+
+\begin{itemize}
+  \item \texttt{Assets/Scripts/Player/RunnerController.cs}
+  \item \texttt{Assets/Scripts/Player/PlayerCollision.cs}
+  \item \texttt{Assets/Scripts/Player/EnergyModeController.cs}
+\end{itemize}
+
+\texttt{RunnerController} 负责角色自动前进、换道、跳跃和下滑；\texttt{PlayerCollision} 处理玩家与障碍物、收集物、能量门的碰撞；\texttt{EnergyModeController} 管理玩家当前红蓝能量状态。
+
+\subsection{跑道生成}
+
+跑道生成相关脚本包括：
+
+\begin{itemize}
+  \item \texttt{Assets/Scripts/Track/TrackSpawner.cs}
+  \item \texttt{Assets/Scripts/Track/TrackSegment.cs}
+\end{itemize}
+
+\texttt{TrackSpawner} 负责不断生成和回收跑道段，并在跑道上布置障碍物和颜色门。\texttt{TrackSegment} 负责根据当前主题切换跑道材质颜色，并生成周围赛博朋克环境装饰。
+
+\subsection{UI 系统}
+
+核心脚本为 \texttt{Assets/Scripts/UI/UIManager.cs}。UI 系统包括开始界面、游戏 HUD 和失败界面。开始界面显示标题 \textbf{NEON RUSH}、副标题 \textbf{ENDLESS RUNNER}、START / QUIT 按钮和操作提示。游戏开始前隐藏 HUD，正式开始后显示分数、速度和能量条。
+
+\section{图形与特效实现}
+
+本项目的视觉方向是赛博朋克霓虹风格，整体使用深色背景搭配蓝色、粉色和红色发光元素。
+
+\subsection{霓虹跑道}
+
+相关文件包括：
+
+\begin{itemize}
+  \item \texttt{Assets/Shades/S\_CyberTrack.shader}
+  \item \texttt{Assets/Shades/S\_FlowingNeonStrip.shader}
+  \item \texttt{Assets/Materials/M\_CyberLane\_Cyan.mat}
+  \item \texttt{Assets/Materials/M\_CyberEdge\_Magenta.mat}
+\end{itemize}
+
+跑道材质使用发光颜色和动态流动效果，使道路边缘和车道线具有向后流动的速度感。流动霓虹线使用时间参数和 UV 变化制造移动脉冲，增强玩家高速前进的视觉反馈。
+
+\subsection{能量门}
+
+相关文件包括：
+
+\begin{itemize}
+  \item \texttt{Assets/Scripts/Gameplay/ColorGate.cs}
+  \item \texttt{Assets/Scripts/Gameplay/ColorGateVisual.cs}
+  \item \texttt{Assets/Shades/S\_EnergyGate.shader}
+\end{itemize}
+
+能量门分为红色和蓝色。玩家当前能量模式与门颜色一致时通过，否则会受到惩罚并触发失败或撞击反馈。门的颜色和粒子效果用于提示玩家及时切换状态。
+
+\subsection{粒子特效}
+
+相关文件包括：
+
+\begin{itemize}
+  \item \texttt{Assets/Prefabs/VFX/VFX\_Collect.prefab}
+  \item \texttt{Assets/Prefabs/VFX/VFX\_Hit.prefab}
+  \item \texttt{Assets/Prefabs/VFX/VFX\_GatePass.prefab}
+  \item \texttt{Assets/Prefabs/VFX/VFX\_Burst.prefab}
+  \item \texttt{Assets/Scripts/Gameplay/VfxUtility.cs}
+\end{itemize}
+
+项目将收集、碰撞、过门和能量爆发做成独立粒子 prefab，通过 \texttt{VfxUtility} 统一生成。该工具会让粒子使用非缩放时间，保证游戏失败暂停后特效仍能显示。
+
+\subsection{玩家跟随光效}
+
+相关文件为 \texttt{Assets/Scripts/Player/PlayerFollowGlow.cs}。玩家身后带有运行时生成的粒子拖尾和点光源。光效颜色会根据当前能量状态变化，蓝色模式偏青蓝，红色模式偏红粉。该效果让角色在高速移动时更容易被观察到。
+
+\subsection{后处理}
+
+项目使用 URP Volume 调整 Bloom、Color Adjustments、Vignette 和 Fog。Bloom 是整体赛博朋克风格的重要组成部分，它让发光材质、粒子和能量门具有更明显的霓虹效果。
+
+\section{项目截图}
+
+本节用于放置最终演示截图。截图文件可以放入 \texttt{docs/images/} 目录，再取消下方注释并替换文件名。
+
+\begin{figure}[H]
+  \centering
+  \fbox{\parbox[c][5cm][c]{0.82\textwidth}{\centering 截图占位：开始界面 NEON RUSH}}
+  % \includegraphics[width=0.82\textwidth]{docs/images/start_menu.png}
+  \caption{开始界面}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \fbox{\parbox[c][5cm][c]{0.82\textwidth}{\centering 截图占位：霓虹跑道与玩家奔跑画面}}
+  % \includegraphics[width=0.82\textwidth]{docs/images/gameplay_track.png}
+  \caption{主游戏画面}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \fbox{\parbox[c][5cm][c]{0.82\textwidth}{\centering 截图占位：红蓝能量门和粒子反馈}}
+  % \includegraphics[width=0.82\textwidth]{docs/images/color_gate_vfx.png}
+  \caption{能量门与交互反馈}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \fbox{\parbox[c][5cm][c]{0.82\textwidth}{\centering 截图占位：能量爆发特效}}
+  % \includegraphics[width=0.82\textwidth]{docs/images/energy_burst.png}
+  \caption{能量爆发效果}
+\end{figure}
+
+\section{资源来源与版权记录}
+
+外部素材来源已整理在 \texttt{docs/asset\_sources.md}，主要包括：
+
+\begin{itemize}
+  \item APlayBox 纳西妲 / Nahida 角色模型。
+  \item Quaternius Cyberpunk Game Kit / Ultimate Platformer Pack。
+  \item Unity Starter Assets 第三人称角色控制器资源。
+  \item AllSky Free - Deep Dusk 天空盒。
+  \item DELTation Toon Shader。
+  \item Delt06 URP Toon Shader Cyberpunk Demo 视觉参考。
+  \item 项目中的背景音乐和其他素材记录。
+\end{itemize}
+
+本项目仅用于课程学习和非商业演示。第三方角色、音乐、美术包和示例资源的版权归原作者或权利方所有。若后续公开发布，应替换或重新确认所有素材的授权状态。
+
+\section{组员分工}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{p{3cm}p{10cm}}
+\toprule
+成员 & 主要工作 \\
+\midrule
+同学 1 & 游戏主要逻辑、项目整合、赛博环境、后处理、渲染包导入、角色模型导入、音频整合。 \\
+同学 2 & 跑道段、障碍物、收集物制作，跑道摆放和可玩性调整。 \\
+同学 3 & 能量爆发特效、开始界面、跑道光效、粒子反馈和图形展示内容。 \\
+\bottomrule
+\end{tabular}
+\caption{小组成员分工}
+\end{table}
+
+\subsection{本人负责内容}
+
+本人主要负责项目中的图形展示与视觉反馈部分，包括：
+
+\begin{itemize}
+  \item 制作和调整游戏开始界面，包括标题、按钮、操作提示和开始流程。
+  \item 调整跑道边缘和车道线的流动霓虹效果，增强高速移动感。
+  \item 接入碰撞、过门、收集和能量爆发粒子特效。
+  \item 调整蓝门、红门、撞击和能量爆发等反馈效果的颜色与大小。
+  \item 整理图形说明文档和素材来源记录，便于项目汇报。
+\end{itemize}
+
+\section{测试结果}
+
+经过测试，项目当前可以完成以下流程：
+
+\begin{enumerate}
+  \item 进入游戏后显示开始界面。
+  \item 点击 START 或按 Enter / Space 后开始跑酷。
+  \item 玩家可以进行换道、跳跃和下滑。
+  \item 障碍物碰撞、颜色门判定和粒子反馈可以正常触发。
+  \item 能量爆发特效可以通过 F 键触发。
+  \item 游戏失败后进入失败界面，显示分数和距离。
+  \item 项目 C\# 编译通过，当前无编译错误。
+\end{enumerate}
+
+\section{项目感想}
+
+通过本次项目，小组对 Unity 项目的完整开发流程有了更直观的理解。相比单独完成某一个脚本功能，完整项目需要同时考虑玩法、视觉、UI、资源管理和版本提交等多个方面。尤其是跑酷游戏中，玩家移动速度较快，如果视觉反馈不够清晰，就会影响操作判断，因此粒子大小、发光强度、颜色区分和 UI 可读性都需要反复调整。
+
+在图形效果方面，URP 的 Bloom、Volume 和发光材质对赛博朋克风格帮助很大。跑道边缘流动霓虹线和玩家跟随光效能明显增强速度感，但亮度过高时也会干扰观察，所以最终需要在“好看”和“可玩”之间取得平衡。
+
+在协作方面，项目中还涉及 Git 提交、素材来源整理和分工记录。通过整理 \texttt{asset\_sources.md} 和实验报告，我们认识到课程项目不仅要实现功能，也要说明素材来源、许可证和修改情况，这对后续公开展示或继续开发很重要。
+
+\section{总结}
+
+本实验完成了一个具有完整基础玩法和赛博朋克视觉风格的 3D 无尽跑酷 Demo。项目在玩法层面实现了跑酷移动、障碍物、能量门、能量爆发和 UI 流程；在图形层面实现了霓虹跑道、发光材质、Bloom 后处理、粒子 VFX 和玩家跟随光效。
+
+后续可以继续优化的方向包括：增加更多类型的收集物和道具，完善音效反馈，提升关卡节奏变化，增加排行榜或结算界面，并进一步统一 UI 视觉细节。
+
+\end{document}

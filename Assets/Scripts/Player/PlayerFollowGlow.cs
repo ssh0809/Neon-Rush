@@ -187,6 +187,7 @@ public sealed class PlayerFollowGlow : MonoBehaviour
         ParticleSystem.VelocityOverLifetimeModule velocity = particles.velocityOverLifetime;
         velocity.enabled = true;
         velocity.space = ParticleSystemSimulationSpace.Local;
+        velocity.x = new ParticleSystem.MinMaxCurve(0f, 0f);
         velocity.z = new ParticleSystem.MinMaxCurve(-1.2f, -3.2f);
         velocity.y = new ParticleSystem.MinMaxCurve(-0.2f, 0.45f);
 

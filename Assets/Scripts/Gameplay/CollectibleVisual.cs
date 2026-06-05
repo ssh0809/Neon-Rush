@@ -263,7 +263,11 @@ public sealed class CollectibleVisual : MonoBehaviour
 
     private static Material CreateMaterial(Color baseColor, Color emissionColor, string name)
     {
-        Shader shader = Shader.Find("Universal Render Pipeline/Unlit");
+        Shader shader = Shader.Find("NeonRush/RuntimeEmissiveUnlit");
+        if (shader == null)
+        {
+            shader = Shader.Find("Universal Render Pipeline/Unlit");
+        }
         if (shader == null)
         {
             shader = Shader.Find("Unlit/Color");
@@ -281,7 +285,9 @@ public sealed class CollectibleVisual : MonoBehaviour
         Material mat = new Material(shader);
         mat.name = name;
         mat.SetColor("_BaseColor", baseColor);
+        mat.SetColor("_Color", Color.white);
         mat.SetColor("_EmissionColor", emissionColor);
+        mat.SetFloat("_EmissionPower", 1f);
         return mat;
     }
 }

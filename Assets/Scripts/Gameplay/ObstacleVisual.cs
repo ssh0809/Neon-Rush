@@ -250,8 +250,12 @@ public sealed class ObstacleVisual : MonoBehaviour
 
     private Material CreateNeonMaterial()
     {
-        // URP/Unlit 保证颜色正确显示
-        Shader shader = Shader.Find("Universal Render Pipeline/Unlit");
+        // Use a project-owned shader so runtime-created obstacle materials survive Player stripping.
+        Shader shader = Shader.Find("NeonRush/RuntimeEmissiveUnlit");
+        if (shader == null)
+        {
+            shader = Shader.Find("Universal Render Pipeline/Unlit");
+        }
         if (shader == null)
         {
             shader = Shader.Find("Unlit/Color");
@@ -293,6 +297,9 @@ public sealed class ObstacleVisual : MonoBehaviour
             Color color = ResolveColorForPart(r.gameObject.name);
             partOriginalColors[i] = color;
             r.material.SetColor("_BaseColor", color);
+            r.material.SetColor("_Color", Color.white);
+            r.material.SetColor("_EmissionColor", color * 0.65f);
+            r.material.SetFloat("_EmissionPower", 1f);
         }
     }
 

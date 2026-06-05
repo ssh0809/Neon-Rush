@@ -112,6 +112,8 @@ public sealed class HologramProjectorEffect : MonoBehaviour
         ParticleSystem.VelocityOverLifetimeModule velocity = particles.velocityOverLifetime;
         velocity.enabled = true;
         velocity.space = ParticleSystemSimulationSpace.Local;
+        velocity.x = new ParticleSystem.MinMaxCurve(0f, 0f);
+        velocity.y = new ParticleSystem.MinMaxCurve(0f, 0f);
         velocity.z = new ParticleSystem.MinMaxCurve(beamLength * 0.6f, beamLength);
 
         ParticleSystem.SizeOverLifetimeModule size = particles.sizeOverLifetime;

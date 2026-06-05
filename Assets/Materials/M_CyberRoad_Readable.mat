@@ -8,16 +8,11 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: M_CyberRoad_Readable
-  m_Shader: {fileID: 4800000, guid: 849dc4ff793a3f943ad21a3b6ee26456, type: 3}
+  m_Shader: {fileID: 4800000, guid: b9f3c6d4161241918f379f3642e6a4ed, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords:
-  - _ADDITIONAL_LIGHTS_ENABLED
-  - _EMISSION
-  - _ENVIRONMENT_LIGHTING_ENABLED
-  - _FOG
-  m_InvalidKeywords:
-  - _ZWRITE_ON
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0

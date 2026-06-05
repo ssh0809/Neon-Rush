@@ -250,8 +250,10 @@ public sealed class EnergyBurst : MonoBehaviour
     {
         GameObject obj = new GameObject(objectName);
         obj.transform.SetParent(parent, false);
+        obj.SetActive(false);
 
         ParticleSystem particles = obj.AddComponent<ParticleSystem>();
+        particles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
         ParticleSystem.MainModule main = particles.main;
         main.loop = false;
         main.playOnAwake = false;
@@ -318,6 +320,7 @@ public sealed class EnergyBurst : MonoBehaviour
         renderer.sortingFudge = shockwave ? 2f : 1.4f;
         renderer.material = CreateRuntimeParticleMaterial();
 
+        obj.SetActive(true);
         particles.Play();
     }
 
