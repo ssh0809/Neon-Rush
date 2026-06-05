@@ -4,14 +4,14 @@
 
 ## 推荐环境
 
-- Unity：Unity 6 `6000.4.7f1`
+- Unity：Unity 6 `6000.1.17f1`
 - 模板：Universal 3D / 3D URP
 - 渲染管线：Universal Render Pipeline
 - 输入：Unity Input System
 - 目标平台：Windows PC 演示
 - 主场景：`Assets/Scenes/Main.unity`
 
-## 最小可玩内容
+## 核心玩法
 
 - 三轨道自动向前跑酷
 - A/D 或左右方向键换道
@@ -51,7 +51,7 @@ Assets/
 docs/
   asset_sources.md            外部素材来源与版权记录
   graphics_notes.md           图形效果说明
-  team_tasks.md               中文组员分工
+  team_tasks.md               组员分工
 ```
 
 ## 主场景对象
